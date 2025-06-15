@@ -1,103 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bank Referral Form</title>
-  
-  <!-- Bootstrap 5 CDN -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<html>
+  <head>
+    <title>Bank Referral Form</title>
+    <!-- ✅ Bootstrap CSS CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script>
+      function submitForm(event) {
+        event.preventDefault();
 
-  <script>
-    function submitForm(event) {
-      event.preventDefault();
+        const url = "https://script.google.com/macros/s/AKfycbwrhmbKEsQsKuLYSns-vEqD73ERIsll-K6fzKIvh0InT3onZlb9lhzDPx1SS1cw37vSfg/exec"; // ✅ Replace with your Web App URL
 
-      const url = "https://script.google.com/macros/s/AKfycby3iy613BErDhwb8QYhDkuISi02qhCvMd3DEvU2axj3aKveKzexxjttfgksTjkEnCtBjw/exec"; // Replace with your actual URL
+        const form = document.getElementById("referralForm");
+        const formData = new FormData(form);
 
-      const formData = {
-        name: document.getElementById("name").value,
-        mobile: document.getElementById("mobile").value,
-        email: document.getElementById("email").value,
-        bank: document.getElementById("bank").value,
-        referral: document.getElementById("referral").value
-      };
+        fetch(url, {
+          method: "POST",
+          body: formData,
+        })
+          .then(() => {
+            const selectedBank = formData.get("bank");
 
-      fetch(url, {
-        method: "POST",
-        body: JSON.stringify(formData),
-        headers: { "Content-Type": "application/json" }
-      })
-      .then(response => response.text())
-      .then(data => {
-        const redirectMap = {
-          "HDFC": "https://www.hdfc.com",
-          "ICICI": "https://www.icicibank.com",
-          "SBI": "https://www.onlinesbi.sbi",
-          "Kotak bank": "https://www.kotak.com"
-        };
+            const redirectMap = {
+              HDFC: "https://www.hdfc.com",
+              ICICI: "https://www.icicibank.com",
+              SBI: "https://www.onlinesbi.sbi",
+              "Kotak bank": "https://www.kotak.com",
+            };
 
-        const redirectUrl = redirectMap[formData.bank];
-        if (redirectUrl) {
-          window.location.href = redirectUrl;
-        } else {
-          alert("Bank URL not found");
-        }
-      })
-      .catch(error => alert("Error: " + error));
-    }
-  </script>
-</head>
-<body class="bg-light">
-  <div class="container mt-5">
-    <div class="card shadow-lg">
-      <div class="card-header bg-primary text-white">
-        <h4 class="mb-0">Bank Referral Form</h4>
-      </div>
-      <div class="card-body">
-        <form onsubmit="submitForm(event)">
-          <div class="mb-3">
-            <label for="name" class="form-label">Customer Name</label>
-            <input type="text" class="form-control" id="name" required>
-          </div>
+            window.location.href = redirectMap[selectedBank] || "/";
+          })
+          .catch((error) => alert("Submission failed: " + error));
+      }
+    </script>
+  </head>
+  <body class="bg-light">
+    <div class="container py-5">
+      <div class="card shadow-lg">
+        <div class="card-body">
+          <h2 class="card-title mb-4 text-center">Bank Referral Form</h2>
+          <form id="referralForm" onsubmit="submitForm(event)">
+            <div class="mb-3">
+              <label for="name" class="form-label">Customer Name</label>
+              <input type="text" class="form-control" id="name" name="name" required />
+            </div>
 
-          <div class="mb-3">
-            <label for="mobile" class="form-label">Mobile Number</label>
-            <input type="text" class="form-control" id="mobile" required>
-          </div>
+            <div class="mb-3">
+              <label for="mobile" class="form-label">Mobile Number</label>
+              <input type="text" class="form-control" id="mobile" name="mobile" required />
+            </div>
 
-          <div class="mb-3">
-            <label for="email" class="form-label">Email ID</label>
-            <input type="email" class="form-control" id="email" required>
-          </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email ID</label>
+              <input type="email" class="form-control" id="email" name="email" required />
+            </div>
 
-          <div class="mb-3">
-            <label for="bank" class="form-label">Bank Name</label>
-            <select class="form-select" id="bank" required>
-              <option value="">--Select Bank--</option>
-              <option>HDFC</option>
-              <option>ICICI</option>
-              <option>SBI</option>
-              <option>Kotak bank</option>
-            </select>
-          </div>
+            <div class="mb-3">
+              <label for="bank" class="form-label">Bank Name</label>
+              <select class="form-select" id="bank" name="bank" required>
+                <option value="">--Select Bank--</option>
+                <option>HDFC</option>
+                <option>ICICI</option>
+                <option>SBI</option>
+                <option>Kotak bank</option>
+              </select>
+            </div>
 
-          <div class="mb-3">
-            <label for="referral" class="form-label">Referral Person</label>
-            <select class="form-select" id="referral" required>
-              <option value="">--Select--</option>
-              <option>Person a</option>
-              <option>Person b</option>
-              <option>Person c</option>
-            </select>
-          </div>
+            <div class="mb-4">
+              <label for="referral" class="form-label">Referral Person</label>
+              <select class="form-select" id="referral" name="referral" required>
+                <option value="">--Select--</option>
+                <option>Person a</option>
+                <option>Person b</option>
+                <option>Person c</option>
+              </select>
+            </div>
 
-          <button type="submit" class="btn btn-success w-100">Submit</button>
-        </form>
+            <button type="submit" class="btn btn-primary w-100">Submit</button>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
-
-  <!-- Bootstrap JS (optional for advanced components) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+  </body>
 </html>
